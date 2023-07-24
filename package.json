@@ -1,6 +1,6 @@
 {
   "name": "code-review-private-ai",
-  "version": "0.0.26",
+  "version": "0.1.0",
   "description": "Your private AI code reviewer",
   "engines": {
     "node": ">=18",
