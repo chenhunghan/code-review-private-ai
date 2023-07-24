@@ -43,6 +43,7 @@ export const getFileNames = async (isCi: boolean): Promise<string[]> => {
     });
 
     if (filteredFiles.length === 0) {
+      console.info(`No supported files found. Exiting...`);
       process.exit(0);
     }
 

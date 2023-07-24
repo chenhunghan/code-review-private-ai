@@ -4,6 +4,14 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  HELM_RELEASE_NAME: orca-mini-3b
+  HELM_NAMESPACE: default
+  TEMPERATURE: 0.1
+  DEFAULT_MODEL_HG_REPO_ID: TheBloke/orca_mini_3B-GGML
+  DEFAULT_MODEL_FILE: orca-mini-3b.ggmlv3.q4_0.bin
+  THREADS: 2
+
 permissions:
   pull-requests: write
   contents: read
@@ -22,8 +30,63 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - uses: helm/kind-action@v1.7.0
+      - uses: azure/setup-helm@v3
+      - name: Install ialacol and wait for pods to be ready
+        run: |
+          helm repo add ialacol https://chenhunghan.github.io/ialacol
+          helm repo update
+
+          cat > values.yaml <<EOF
+          replicas: 1
+          deployment:
+            image: quay.io/chenhunghan/ialacol:latest
+            env:
+              DEFAULT_MODEL_HG_REPO_ID: $DEFAULT_MODEL_HG_REPO_ID
+              DEFAULT_MODEL_FILE: $DEFAULT_MODEL_FILE
+              THREADS: $THREADS
+          resources:
+            {}
+          cache:
+            persistence:
+              size: 0.5Gi
+              accessModes:
+                - ReadWriteOnce
+              storageClass: ~
+          cacheMountPath: /app/cache
+          model:
+            persistence:
+              size: 2Gi
+              accessModes:
+                - ReadWriteOnce
+              storageClass: ~
+          modelMountPath: /app/models
+          service:
+            type: ClusterIP
+            port: 8000
+            annotations: {}
+          nodeSelector: {}
+          tolerations: []
+          affinity: {}
+          EOF
+          helm install $HELM_RELEASE_NAME ialacol/ialacol -f values.yaml --namespace $HELM_NAMESPACE
+
+          echo "Wait for the pod to be ready, it takes about 36s to download a 1.93GB model (~50MB/s)"
+          sleep 40
+          kubectl get pods -n $HELM_NAMESPACE
+          kubectl logs --since=1h --selector app.kubernetes.io/name=$HELM_RELEASE_NAME -n $HELM_NAMESPACE
+
+      - name: Port forward and test health of deployment
+        run: |
+          kubectl port-forward svc/$HELM_RELEASE_NAME 8000:8000 &
+          echo "Wait for port-forward to be ready"
+          sleep 5
+
+          kubectl logs --since=1h --selector app.kubernetes.io/name=$HELM_RELEASE_NAME -n $HELM_NAMESPACE
+          curl -v http://localhost:8000/v1/models
+          kubectl logs --since=1h --selector app.kubernetes.io/name=$HELM_RELEASE_NAME -n $HELM_NAMESPACE
       - name: Run code review script
-        run: npm run start-ci
+        run: npm run start -- --ci --model=$DEFAULT_MODEL_FILE --temperature=$TEMPERATURE --basePath="http://localhost:8000/v1"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}

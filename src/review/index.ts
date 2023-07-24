@@ -2,7 +2,6 @@ import { commentOnPR } from "./ci/commentOnPR";
 import { askAI } from "./llm/askAI";
 import { constructPromptsArray } from "./prompt/constructPrompt";
 import { getFileNames } from "./prompt/getFileNames";
-import { getMaxPromptLength } from "./prompt/getMaxPromptLength";
 
 interface ReviewArgs {
   [x: string]: unknown;
@@ -17,7 +16,7 @@ export const review = async (yargs: ReviewArgs) => {
   const temperature = parseFloat(yargs.temperature as string);
   const basePath = yargs.basePath as string;
 
-  const maxPromptLength = getMaxPromptLength(modelName);
+  const maxPromptLength = parseInt(process.env.CONTEXT_LENGTH as string) ?? 4000;
 
   const fileNames = await getFileNames(isCi);
   const prompts = await constructPromptsArray(fileNames, maxPromptLength);
