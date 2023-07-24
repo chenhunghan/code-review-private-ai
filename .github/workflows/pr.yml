@@ -86,7 +86,7 @@ jobs:
           curl -v http://localhost:8000/v1/models
           kubectl logs --since=1h --selector app.kubernetes.io/name=$HELM_RELEASE_NAME -n $HELM_NAMESPACE
       - name: Run code review script
-        run: npm run start -- --ci --model=$DEFAULT_MODEL_HG_REPO_ID --temperature=$TEMPERATURE --basePath="http://localhost:8000/v1"
+        run: npm run start -- --ci --model=$DEFAULT_MODEL_FILE --temperature=$TEMPERATURE --basePath="http://localhost:8000/v1"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
