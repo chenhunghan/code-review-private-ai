@@ -2,6 +2,10 @@
   "name": "code-review-private-ai",
   "version": "0.0.26",
   "description": "Your private AI code reviewer",
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
   "bin": {
     "code-review-private-ai": "./dist/index.js"
   },

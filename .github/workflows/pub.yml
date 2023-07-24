@@ -1,0 +1,56 @@
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  versioning:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        registry-url: "https://npm.pkg.github.com"
+        node-version: 18
+    - run: |
+        git config --local user.email "chenhungh@gmail.com"
+        git config --local user.name "Github Action Bot"
+    - name: '`npm version patch` if PR has no label "minor" or "major"'
+      if: ${{ !contains(github.event.pull_request.labels.*.name, 'minor') && !contains(github.event.pull_request.labels.*.name, 'major') }}
+      run: |
+        npm version patch
+    - name: '`npm version minor` if PR has label "minor"'
+      if: contains(github.event.pull_request.labels.*.name, 'minor')
+      run: |
+        npm version minor
+    - name: '`npm version major` if PR has label "major"'
+      if: contains(github.event.pull_request.labels.*.name, 'major')
+      run: |
+        npm version major
+    - name: Push versioning commit and tag
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        tags: true
+
+  publish:
+    needs: versioning
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        registry-url: "https://npm.pkg.github.com"
+        node-version: 18
+    # need this if commit/push in other jobs (versioning)
+    - run: git pull
+    - run: npm ci
+    - run: npm run build
+    - run: |
+        npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+        npm publish --access public
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
