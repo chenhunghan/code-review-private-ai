@@ -4,7 +4,7 @@ Forked from <https://github.com/mattzcarey/code-review-gpt> but removed OpenAI G
 
 ## CI Usage (GitHub Actions)
 
-Use Llama 2 7B Chat
+Use Llama 2 7B Chat, needs ~8GB RAM
 
 ```yml
 - name: Install code-review-private-ai
