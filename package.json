@@ -13,7 +13,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "tsx ./src/index.ts review",
-    "start-ci": "tsx ./src/index.ts review --ci",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
