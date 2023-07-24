@@ -1,15 +1,9 @@
-import dotenv from "dotenv";
 import { getYargs } from "./args";
-
-dotenv.config();
 
 const main = async () => {
   const argv = await getYargs();
 
-  if (argv._.includes("configure")) {
-    const { configure } = await import("./configure");
-    await configure();
-  } else if (argv._.includes("review")) {
+  if (argv._.includes("review")) {
     const { review } = await import("./review");
     await review(argv);
   } else {

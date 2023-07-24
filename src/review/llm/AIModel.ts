@@ -4,7 +4,6 @@ import { retryAsync } from "ts-retry";
 interface IAIModel {
   modelName: string;
   temperature: number;
-  apiKey: string;
   retryCount?: number;
 }
 
@@ -16,7 +15,7 @@ class AIModel {
 
   constructor(options: IAIModel) {
     this.model = new OpenAIChat({
-      openAIApiKey: options.apiKey,
+      openAIApiKey: "sk-fake-key",
       modelName: options.modelName,
       temperature: options.temperature,
     });

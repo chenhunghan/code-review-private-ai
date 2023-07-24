@@ -1,4 +1,3 @@
-import { openAIApiKey } from "../../config";
 import AIModel from "./AIModel";
 import { createSummary, processFeedbacks } from "./feedbackProcessor";
 import { generateMarkdownReport } from "./generateMarkdownReport";
@@ -12,7 +11,6 @@ export const askAI = async (
   const model = new AIModel({
     modelName: modelName,
     temperature: 0.0,
-    apiKey: openAIApiKey(),
   });
 
   const feedbacks = await processFeedbacks(model, prompts);

@@ -1,37 +1,31 @@
 {
-  "name": "code-review-gpt",
+  "name": "code-review-private-ai",
   "version": "0.0.26",
-  "description": "Your AI code reviewer",
+  "description": "Your private AI code reviewer",
   "bin": {
-    "code-review-gpt": "./dist/index.js"
+    "code-review-private-ai": "./dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "ts-node ./src/index.ts review",
-    "start-ci": "ts-node ./src/index.ts review --ci",
+    "start": "tsx ./src/index.ts review",
+    "start-ci": "tsx ./src/index.ts review --ci",
     "build": "node utils/build.js",
     "postbuild": "node utils/shebang.js && chmod +x ./dist/index.js"
   },
   "keywords": [
     "code-review",
     "review",
-    "chatgpt",
-    "gpt",
-    "gpt3",
-    "openai",
-    "gpt4",
     "vertexai",
     "huggingface",
     "ai",
     "genai",
     "llama"
   ],
-  "author": "Matt Carey",
+  "author": "Hung-Han Chen",
   "license": "MIT",
   "dependencies": {
     "@actions/github": "^5.1.1",
-    "dotenv": "^16.3.1",
     "inquirer": "^9.2.8",
     "langchain": "^0.0.103",
     "ts-retry": "^4.2.1",
@@ -49,7 +43,7 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "npm-dts": "^1.3.12",
-    "ts-node": "^10.9.1",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   },
   "files": [

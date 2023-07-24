@@ -1,7 +1,4 @@
 import yargs from "yargs";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const handleNoCommand = async () => {
   const inquirer = await import("inquirer");
@@ -34,10 +31,10 @@ export const getYargs = async () => {
     .option("model", {
       description: "The model to use for generating the review",
       type: "string",
-      default: "gpt-4",
+      // https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/tree/main
+      default: "llama-2-7b-chat.ggmlv3.q4_0.bin",
     })
     .command("review", "Review the pull request")
-    .command("configure", "Configure the script")
     .parseSync();
 
   if (argv.ci) {

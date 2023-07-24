@@ -1,4 +1,4 @@
-name: Code Review GPT
+name: Code Review Private AI CI
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -21,13 +21,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install code-review-gpt
-        run: npm install code-review-gpt
+      - name: Install code-review-private-ai
+        run: npm install code-review-private-ai
 
       - name: Run code review script
-        run: npx code-review-gpt review --ci
+        run: npx code-review-private-ai review --ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_SHA: ${{ github.sha }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

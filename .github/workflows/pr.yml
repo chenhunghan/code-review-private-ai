@@ -1,4 +1,4 @@
-name: Code Review GPT CI
+name: Code Review Private AI CI
 
 on:
   pull_request:
@@ -28,5 +28,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_SHA: ${{ github.sha }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       

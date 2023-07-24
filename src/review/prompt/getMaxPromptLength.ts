@@ -1,17 +1,9 @@
-import { modelInfo } from "../constants";
 
 export const getMaxPromptLength = (modelName: string): number => {
-  const maxPromptLength = modelInfo.find(
-    (info) => info.model === modelName
-  )?.maxPromptLength;
-
-  if (!maxPromptLength) {
-    throw new Error(
-      `Model ${modelName} not found. Please choose one of ${modelInfo.map(
-        (info) => info.model
-      )} or make a PR to add a new model.`
-    );
+  if (!process.env.CONTEXT_LENGTH) {
+    // Default context length for the basic llama-2-7b-chat model
+    // See https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML
+    return 4000;
   }
-
-  return maxPromptLength;
+  return parseInt(process.env.CONTEXT_LENGTH);
 };
