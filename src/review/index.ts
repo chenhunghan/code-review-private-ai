@@ -14,13 +14,15 @@ interface ReviewArgs {
 export const review = async (yargs: ReviewArgs) => {
   const isCi = yargs.ci;
   const modelName = yargs.model as string;
+  const temperature = parseFloat(yargs.temperature as string);
+  const basePath = yargs.basePath as string;
 
   const maxPromptLength = getMaxPromptLength(modelName);
 
   const fileNames = await getFileNames(isCi);
   const prompts = await constructPromptsArray(fileNames, maxPromptLength);
 
-  const response = await askAI(prompts, modelName);
+  const response = await askAI(prompts, modelName, temperature, basePath);
 
   if (isCi) {
     await commentOnPR(response);

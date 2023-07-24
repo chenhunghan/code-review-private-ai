@@ -34,6 +34,16 @@ export const getYargs = async () => {
       // https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGML/tree/main
       default: "llama-2-7b-chat.ggmlv3.q4_0.bin",
     })
+    .option("temperature", {
+      description: "The temperature to use for generating the review",
+      type: "string",
+      default: "0.0",
+    })
+    .option("basePath", {
+      description: "The basePath to pass to OpenAI client library, should be the http endpoint of your OpenAI API-compatible server",
+      type: "string",
+      default: "http://localhost:8000/v1",
+    })
     .command("review", "Review the pull request")
     .parseSync();
 

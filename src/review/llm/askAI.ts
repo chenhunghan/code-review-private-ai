@@ -4,13 +4,16 @@ import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
   prompts: string[],
-  modelName: string
+  modelName: string,
+  temperature: number,
+  basePath: string
 ): Promise<string> => {
   console.info("Asking the experts...");
 
   const model = new AIModel({
     modelName: modelName,
-    temperature: 0.0,
+    temperature,
+    basePath: basePath,
   });
 
   const feedbacks = await processFeedbacks(model, prompts);

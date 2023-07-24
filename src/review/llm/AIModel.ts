@@ -4,6 +4,7 @@ import { retryAsync } from "ts-retry";
 interface IAIModel {
   modelName: string;
   temperature: number;
+  basePath: string;
   retryCount?: number;
 }
 
@@ -18,6 +19,9 @@ class AIModel {
       openAIApiKey: "sk-fake-key",
       modelName: options.modelName,
       temperature: options.temperature,
+      configuration: {
+        basePath: options.basePath,
+      }
     });
     this.retryCount = options.retryCount || defaultRetryCount;
   }
