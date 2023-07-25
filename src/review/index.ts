@@ -19,6 +19,10 @@ export const review = async (yargs: ReviewArgs) => {
   const maxPromptLength = parseInt(process.env.CONTEXT_LENGTH as string) ?? 4000;
 
   const fileNames = await getFileNames(isCi);
+  if (fileNames.length === 0) {
+    console.info(`Not file diff. Exiting...`);
+    process.exit(0);
+  }
   const prompts = await constructPromptsArray(fileNames, maxPromptLength);
 
   const response = await askAI(prompts, modelName, temperature, basePath);

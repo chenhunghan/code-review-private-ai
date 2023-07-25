@@ -3,7 +3,7 @@ import { extname, join } from "path";
 import { supportedFiles } from "../constants";
 import { getGitHubEnvVariables } from "../../config";
 
-const gitCommand = async (isCi: boolean): Promise<string> => {
+const gitCommand = (isCi: boolean): string => {
   if (isCi) {
     const { githubSha, baseSha } = getGitHubEnvVariables();
     return `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
@@ -12,8 +12,8 @@ const gitCommand = async (isCi: boolean): Promise<string> => {
   }
 };
 
-const getStagedFiles = async (isCi: boolean): Promise<string[]> => {
-  const commandString = await gitCommand(isCi);
+const getStagedFiles = (isCi: boolean): Promise<string[]> => {
+  const commandString = gitCommand(isCi);
 
   return new Promise((resolve, reject) => {
     exec(commandString, (error, stdout, stderr) => {
