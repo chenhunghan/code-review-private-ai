@@ -34,6 +34,7 @@ class AIModel {
     return retryAsync(
       async () => {
         const modelResponse = await this.model.call(prompt);
+        console.info(`modelResponse`, modelResponse)
         return JSON.parse(modelResponse) as T;
       },
       {
