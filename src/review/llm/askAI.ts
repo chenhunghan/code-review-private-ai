@@ -17,9 +17,15 @@ export const askAI = async (
 
   const feedbacks: Array<{ filename: string, feedback: string }> = [];
   for (const diff of diffs) {
+    const prompt = promptTemplate(diff.filename, diff.gitDiff)
+    console.info(`Prompting for ${diff.filename}...`);
+    console.info(prompt);
+    const feedback = await model.callModel(prompt);
+    console.info(`Feeback for ${diff.filename}...`);
+    console.info(feedback);
     feedbacks.push({
       filename: diff.filename,
-      feedback: await model.callModel(promptTemplate(diff.filename, diff.gitDiff))
+      feedback,
     });
   }
 
