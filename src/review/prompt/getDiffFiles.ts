@@ -6,14 +6,13 @@ import { getGitHubEnvVariables } from "../../config";
 const gitDiffFilenameCommand = (): string => {
   const { githubSha, baseSha } = getGitHubEnvVariables();
     const cmd = `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha}`;
-    console.info('CMD: ', cmd)
     return cmd;
 };
 
 const gitDiffFileContentCommand = (filename: string): string => {
   const { githubSha, baseSha } = getGitHubEnvVariables();
-    const cmd = `git diff --name-only --diff-filter=AMT ${baseSha} ${githubSha} -- ${filename}}`
-    console.info('CMD: ', cmd)
+    const cmd = `git diff --diff-filter=AMT ${baseSha} ${githubSha} -- ${filename}}`
+    console.info('DIFF CMD: ', cmd)
     return cmd;
 };
 
