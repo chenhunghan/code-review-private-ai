@@ -24,13 +24,16 @@ export const review = async (yargs: ReviewArgs) => {
   let gitDiffs: Array<{ filename: string, gitDiff: string }> = []
   for (const filename of diffFilenames) {
     const gitDiff = await getDiffFileContent(filename);
-    if (gitDiff.length === 0 || gitDiff.length >= maxPromptLength) {
-      console.info(`No diff content found or exceeding MAX_PROMPT_LENGTH. Skip ${filename}...`);
-    } else {
+
+    if (gitDiff.length > 0 && gitDiff.length < maxPromptLength) {
       gitDiffs.push({
         filename,
         gitDiff,
       });
+    } else if (gitDiff.length === 0) {
+      console.info(`No diff content found. Skip ${filename}...`);
+    } else if (gitDiff.length >= maxPromptLength) { 
+      console.info(`diff cexceeding MAX_PROMPT_LENGTH:${maxPromptLength}. Skip ${filename}...`);
     }  
   }
   const comment = await askAI(gitDiffs, modelName, temperature, basePath);
