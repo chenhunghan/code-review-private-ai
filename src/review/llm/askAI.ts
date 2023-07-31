@@ -1,9 +1,8 @@
+import { promptTemplate } from "../prompt/templates";
 import AIModel from "./AIModel";
-import { createSummary, processFeedbacks } from "./feedbackProcessor";
-import { generateMarkdownReport } from "./generateMarkdownReport";
 
 export const askAI = async (
-  prompts: string[],
+  diffs: Array<{ filename: string, gitDiff: string}>,
   modelName: string,
   temperature: number,
   basePath: string
@@ -16,9 +15,25 @@ export const askAI = async (
     basePath: basePath,
   });
 
-  const feedbacks = await processFeedbacks(model, prompts);
+  const feedbacks: Array<{ filename: string, feedback: string }> = [];
+  for (const diff of diffs) {
+    const prompt = promptTemplate(diff.filename, diff.gitDiff)
+    console.info(`Prompting for ${diff.filename}...`);
+    console.info(prompt);
+    const feedback = await model.callModel(prompt);
+    console.info(`Feeback for ${diff.filename}...`);
+    console.info(feedback);
+    feedbacks.push({
+      filename: diff.filename,
+      feedback,
+    });
+  }
 
-  const summary = await createSummary(model, feedbacks);
-
-  return generateMarkdownReport(feedbacks, summary);
+  return feedbacks.map(({ filename, feedback }) => 
+    `
+    ${filename}:
+    ---
+    ${feedback}
+    `
+  ).join("\n");
 };
