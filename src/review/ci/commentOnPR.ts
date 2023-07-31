@@ -33,7 +33,7 @@ export const commentOnPR = async (comment: string) => {
       comment?.body?.includes(signOff)
     );
 
-    const botCommentBody = `${comment}\n\n---\n\n${signOff}`;
+    const botCommentBody = comment;
 
     if (botComment) {
       await octokit.rest.issues.updateComment({

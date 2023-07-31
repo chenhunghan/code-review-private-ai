@@ -23,11 +23,6 @@ const handleNoCommand = async () => {
 
 export const getYargs = async () => {
   const argv = yargs
-    .option("ci", {
-      description: "Indicate that the script is running on a CI environment",
-      type: "boolean",
-      default: false,
-    })
     .option("model", {
       description: "The model to use for generating the review",
       type: "string",
@@ -46,12 +41,6 @@ export const getYargs = async () => {
     })
     .command("review", "Review the pull request")
     .parseSync();
-
-  if (argv.ci) {
-    argv._[0] = "review";
-    console.info("Running in CI mode, defaulting to review.");
-    return argv;
-  }
 
   if (!argv._[0]) {
     argv._[0] = await handleNoCommand();
