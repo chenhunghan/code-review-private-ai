@@ -21,7 +21,7 @@ export const review = async (yargs: ReviewArgs) => {
     process.exit(0);
   }
 
-  let gitDiffs: Array<{ filename: string, gitDiff: string }> = []
+  const gitDiffs: Array<{ filename: string, gitDiff: string }> = []
   for (const filename of diffFilenames) {
     const gitDiff = await getDiffFileContent(filename);
 
@@ -36,7 +36,10 @@ export const review = async (yargs: ReviewArgs) => {
       console.info(`diff cexceeding MAX_PROMPT_LENGTH:${maxPromptLength}. Skip ${filename}...`);
     }  
   }
-  const comment = await askAI(gitDiffs, modelName, temperature, basePath);
 
-  await commentOnPR(comment)
+  if (gitDiffs.length > 0) {
+    const comment = await askAI(gitDiffs, modelName, temperature, basePath);
+
+    await commentOnPR(comment)
+  }
 };
