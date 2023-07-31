@@ -11,7 +11,7 @@ const gitDiffFilenameCommand = (): string => {
 
 const gitDiffFileContentCommand = (filename: string): string => {
   const { githubSha, baseSha } = getGitHubEnvVariables();
-    const cmd = `git diff --diff-filter=AMT ${baseSha} ${githubSha} -- ${filename}}`
+    const cmd = `git diff --diff-filter=AMT ${baseSha} ${githubSha} -- ${filename}`
     console.info('DIFF CMD: ', cmd)
     return cmd;
 };
